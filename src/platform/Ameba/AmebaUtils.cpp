@@ -21,8 +21,8 @@
  *          General utility methods for the Ameba platform.
  */
 /* this file behaves like a config.h, comes first */
-#include <platform/internal/CHIPDeviceLayerInternal.h>
 #include <platform/Ameba/AmebaUtils.h>
+#include <platform/internal/CHIPDeviceLayerInternal.h>
 #include <support/CodeUtils.h>
 #include <support/ErrorStr.h>
 #include <support/logging/CHIPLogging.h>
@@ -72,13 +72,11 @@ int AmebaUtils::OrderScanResultsByRSSI(const void * _res1, const void * _res2)
     return CHIP_NO_ERROR;
 }
 
-
 const char * AmebaUtils::WiFiModeToStr(int wifiMode)
 {
     // TODO
     return "(unknown)";
 }
-
 
 struct netif * AmebaUtils::GetStationNetif(void)
 {
