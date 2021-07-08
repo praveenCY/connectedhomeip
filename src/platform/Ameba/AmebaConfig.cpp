@@ -90,6 +90,8 @@ CHIP_ERROR AmebaConfig::ReadConfigValue(Key key, bool & val)
 
     val = (intVal != 0);
 
+    free(_namespace);
+    free(_name);
     return CHIP_NO_ERROR;
 }
 
@@ -107,7 +109,8 @@ CHIP_ERROR AmebaConfig::ReadConfigValue(Key key, uint32_t & val)
 
     getPref_u32(_namespace, _name, kPrefsTypeInteger, &val);
 
-
+    free(_namespace);
+    free(_name);
     return CHIP_NO_ERROR;
 }
 
@@ -131,6 +134,9 @@ CHIP_ERROR AmebaConfig::ReadConfigValueStr(Key key, char * buf, size_t bufSize, 
     strcpy(_namespace, key.Name);
 
     ret = getPref_str(_namespace, _name, kPrefsTypeString, buf, &outLen);
+
+    free(_namespace);
+    free(_name);
     if (ret == 0)
     {
         return CHIP_NO_ERROR;
@@ -171,6 +177,8 @@ CHIP_ERROR AmebaConfig::WriteConfigValue(Key key, bool val)
     if (!success)
         printf("setPref: %s/%s = %s failed\n", _namespace, _name, value ? "true" : "false");
 
+    free(_namespace);
+    free(_name);
     return CHIP_NO_ERROR;
 }
 
@@ -299,7 +307,7 @@ CHIP_ERROR AmebaConfig::EnsureNamespace(const char * ns)
     {
         printf("dct_register_module failed\n");
     }
-
+    free(temp);
     return CHIP_NO_ERROR;
 }
 
@@ -319,7 +327,7 @@ CHIP_ERROR AmebaConfig::ClearNamespace(const char * ns)
     {
         printf("ClearNamespace failed\n");
     }
-
+    free(temp);
     return CHIP_NO_ERROR;
 }
 
