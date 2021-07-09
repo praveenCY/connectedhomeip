@@ -18,7 +18,8 @@ import("//build_overrides/nlio.gni")
 import("//build_overrides/pigweed.gni")
 
 import("${build_root}/config/linux/pkg_config.gni")
-import("${chip_root}/build/chip/buildconfig_header.gni")
+import("${chip_root}/build/chip/buildconfig_
+er.gni")
 
 import("device.gni")
 
@@ -144,6 +145,11 @@ if (chip_device_platform != "none") {
         "CHIP_DEVICE_LAYER_TARGET_ESP32=1",
         "CHIP_DEVICE_LAYER_TARGET=ESP32",
       ]
+    } else if (chip_device_platform == "p6") {
+      defines += [
+        "CHIP_DEVICE_LAYER_TARGET_P6=1",
+        "CHIP_DEVICE_LAYER_TARGET=P6",
+      ]  
     } else if (chip_device_platform == "linux") {
       defines += [
         "CHIP_DEVICE_LAYER_TARGET_LINUX=1",
@@ -690,6 +696,53 @@ if (chip_device_platform != "none" && chip_device_platform != "external") {
         "mbed/SystemTimeSupport.cpp",
         "mbed/arch.c",
       ]
+    } else if (chip_device_platform == "external") {
+      _platform_target = chip_platform_target
+    } else if (chip_device_platform == "p6") {
+      sources += [
+        "P6/BLEManagerImpl.cpp",
+        "P6/BLEManagerImpl.h",
+        "P6/BlePlatformConfig.h",
+        "P6/CHIPDevicePlatformConfig.h",
+        "P6/CHIPDevicePlatformEvent.h",
+        "P6/CHIPPlatformConfig.h",
+        "P6/ConfigurationManagerImpl.cpp",
+        "P6/ConfigurationManagerImpl.h",
+        "P6/ConnectivityManagerImpl.cpp",
+        "P6/ConnectivityManagerImpl.h",
+        "P6/DeviceNetworkProvisioningDelegateImpl.cpp",
+        "P6/DeviceNetworkProvisioningDelegateImpl.h",
+        "P6/InetPlatformConfig.h",
+        "P6/Logging.cpp",
+        "P6/LwIPCoreLock.cpp",
+        "P6/P6Config.cpp",
+        "P6/P6Config.h",
+        "P6/P6Utils.cpp",
+        "P6/P6Utils.h",
+        "P6/PlatformManagerImpl.cpp",
+        "P6/PlatformManagerImpl.h",
+        "P6/SoftwareUpdateManagerImpl.cpp",
+        "P6/SoftwareUpdateManagerImpl.h",
+        "P6/SystemPlatformConfig.h",
+        "P6/WarmPlatformConfig.h",
+        "FreeRTOS/SystemTimeSupport.cpp",
+        "P6/KeyValueStoreManagerImpl.cpp",
+        "P6/KeyValueStoreManagerImpl.h",
+        "P6/MTBKeyValueStore.cpp",
+        "P6/MTBKeyValueStore.h",
+        "P6/app_platform_cfg.c",
+        "P6/app_platform_cfg.h",
+        "P6/cycfg_bt_settings.c",
+        "P6/cycfg_bt_settings.h",
+        "P6/cycfg_gap.c",
+        "P6/cycfg_gap.h",
+        "P6/cycfg_gatt_db.c",
+        "P6/cycfg_gatt_db.h",
+      ]
+
+      public_deps += [ "${chip_root}/src/crypto" ]
+    } else {
+      assert(false, "Unknown chip_device_platform: ${chip_device_platform}")
     }
 
     if (chip_enable_openthread && chip_mdns == "platform" &&
