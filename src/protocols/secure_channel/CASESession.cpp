@@ -318,7 +318,10 @@ CHIP_ERROR CASESession::SendSigmaR1()
     // Fill in the random value
     ReturnErrorOnFailure(DRBG_get_bytes(msg, kSigmaParamRandomNumberSize));
 
-    // Step 4
+// Step 4
+#ifdef ENABLE_HSM_CASE_EPHERMAL_KEY
+    mEphemeralKey.SetKeyId(CASE_EPHEMERAL_KEY);
+#endif
     ReturnErrorOnFailure(mEphemeralKey.Initialize());
 
     // Step 5
@@ -454,6 +457,9 @@ CHIP_ERROR CASESession::SendSigmaR2()
 
     // Step 3
     // hardcoded to use a p256keypair
+#ifdef ENABLE_HSM_CASE_EPHERMAL_KEY
+    mEphemeralKey.SetKeyId(CASE_EPHEMERAL_KEY);
+#endif
     err = mEphemeralKey.Initialize();
     SuccessOrExit(err);
 
@@ -1071,9 +1077,14 @@ CHIP_ERROR CASESession::ConstructSignedCredentials(const uint8_t ** msgIterator,
 
 CHIP_ERROR CASESession::ComputeIPK(const uint16_t sessionID, uint8_t * ipk, size_t ipkLen)
 {
+    uint8_t sid[2];
+    Encoding::LittleEndian::BufferWriter bbuf(sid, sizeof(sid));
+    bbuf.Put16(sessionID);
+    VerifyOrReturnError(bbuf.Fit(), CHIP_ERROR_NO_MEMORY);
+
     HKDF_sha_crypto mHKDF;
-    ReturnErrorOnFailure(mHKDF.HKDF_SHA256(mFabricSecret, mFabricSecret.Length(), reinterpret_cast<const uint8_t *>(&sessionID),
-                                           sizeof(sessionID), kIPKInfo, sizeof(kIPKInfo), ipk, ipkLen));
+    ReturnErrorOnFailure(mHKDF.HKDF_SHA256(mFabricSecret, mFabricSecret.Length(), bbuf.Buffer(), bbuf.Size(), kIPKInfo,
+                                           sizeof(kIPKInfo), ipk, ipkLen));
 
     return CHIP_NO_ERROR;
 }
