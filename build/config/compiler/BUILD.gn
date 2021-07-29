@@ -147,6 +147,7 @@ config("disabled_warnings") {
     "-Wno-deprecated-declarations",
     "-Wno-unknown-warning-option",
     "-Wno-missing-field-initializers",
+   "-Wno-conversion", 
     "-Wno-unused-parameter",
   ]
   if (!is_debug) {

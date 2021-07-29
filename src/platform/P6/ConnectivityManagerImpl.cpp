@@ -126,7 +126,7 @@ void ConnectivityManagerImpl::_DemandStartWiFiAP(void)
 {
     if (mWiFiAPMode == kWiFiAPMode_OnDemand || mWiFiAPMode == kWiFiAPMode_OnDemand_NoStationProvision)
     {
-        mLastAPDemandTime = System::Clock::GetMonotonicMilliseconds();
+        mLastAPDemandTime = System::Layer::GetClock_MonotonicMS();
         SystemLayer.ScheduleWork(DriveAPState, NULL);
     }
 }
@@ -146,7 +146,7 @@ void ConnectivityManagerImpl::_MaintainOnDemandWiFiAP(void)
     {
         if (mWiFiAPState == kWiFiAPState_Activating || mWiFiAPState == kWiFiAPState_Active)
         {
-            mLastAPDemandTime = System::Clock::GetMonotonicMilliseconds();
+            mLastAPDemandTime = System::Layer::GetClock_MonotonicMS();
         }
     }
 }
@@ -402,7 +402,7 @@ void ConnectivityManagerImpl::DriveAPState()
         // has been demand for the AP within the idle timeout period.
         else if (mWiFiAPMode == kWiFiAPMode_OnDemand || mWiFiAPMode == kWiFiAPMode_OnDemand_NoStationProvision)
         {
-            now = System::Clock::GetMonotonicMilliseconds();
+            now = System::Layer::GetClock_MonotonicMS();
 
             if (mLastAPDemandTime != 0 && now < (mLastAPDemandTime + mWiFiAPIdleTimeoutMS))
             {
@@ -524,7 +524,7 @@ void ConnectivityManagerImpl::DriveStationState()
     // Otherwise the station interface is NOT connected to an AP, so...
     else
     {
-        uint32_t now = static_cast<uint32_t>(System::Clock::GetMonotonicMilliseconds());
+        uint32_t now = static_cast<uint32_t>(System::Layer::GetClock_MonotonicMS());
 
         // Advance the station state to NotConnected if it was previously Connected or Disconnecting,
         // or if a previous initiated connect attempt failed.
