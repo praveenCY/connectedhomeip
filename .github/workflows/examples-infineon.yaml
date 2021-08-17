@@ -27,7 +27,7 @@ jobs:
     infineon:
         name: Infineon examples building
         timeout-minutes: 30
-            
+
         runs-on: ubuntu-latest
         if: github.actor != 'restyled-io[bot]'
 
