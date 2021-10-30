@@ -43,7 +43,8 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
               with:
-                  submodules: true
+                  submodules: recursive
+                  fetch-depth: 100
             - name: Bootstrap
               timeout-minutes: 25
               run: scripts/build/gn_bootstrap.sh
