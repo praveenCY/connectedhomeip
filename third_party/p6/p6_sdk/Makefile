@@ -234,3 +234,7 @@ $(info Tools Directory: $(CY_TOOLS_DIR))
 
 include $(CY_TOOLS_DIR)/make/start.mk
 
+# CHIP: If core-make doesn't otherwise have a JSON generation capability yet,
+# include our own.
+include json.mk
+
