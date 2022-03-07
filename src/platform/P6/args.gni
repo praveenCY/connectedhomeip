@@ -27,3 +27,5 @@ chip_device_platform = "p6"
 lwip_platform = "p6"
 
 chip_build_tests = false
+
+chip_inet_config_enable_ipv4 = false
