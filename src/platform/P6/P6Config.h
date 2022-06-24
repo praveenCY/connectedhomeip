@@ -85,6 +85,13 @@ public:
     static const Key kCounterKey_RebootCount;
     static const Key kCounterKey_UpTime;
     static const Key kCounterKey_TotalOperationalHours;
+    static const Key kConfigKey_LockUser;
+    static const Key kConfigKey_Credential;
+    static const Key kConfigKey_LockUserName;
+    static const Key kConfigKey_CredentialData;
+    static const Key kConfigKey_UserCredentials;
+    static const Key kConfigKey_GroupKeyMax;
+    static const Key kMatterConfig_KeyBase;
 
     // Config value accessors.
     static CHIP_ERROR ReadConfigValue(Key key, bool & val);

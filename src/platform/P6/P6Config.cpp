@@ -82,6 +82,13 @@ const P6Config::Key P6Config::kCounterKey_RebootCount           = { kConfigNames
 const P6Config::Key P6Config::kCounterKey_UpTime                = { kConfigNamespace_ChipCounters, "up-time" };
 const P6Config::Key P6Config::kCounterKey_TotalOperationalHours = { kConfigNamespace_ChipCounters, "total-hours" };
 
+const P6Config::Key P6Config::kConfigKey_LockUser           = { kConfigNamespace_ChipCounters, "lock-user" };
+const P6Config::Key P6Config::kConfigKey_Credential                = { kConfigNamespace_ChipCounters, "credential" };
+const P6Config::Key P6Config::kConfigKey_LockUserName = { kConfigNamespace_ChipCounters, "lock-user-name" };
+const P6Config::Key P6Config::kConfigKey_CredentialData           = { kConfigNamespace_ChipCounters, "CredentialData" };
+const P6Config::Key P6Config::kConfigKey_UserCredentials                = { kConfigNamespace_ChipCounters, "UserCredentials" };
+const P6Config::Key P6Config::kConfigKey_GroupKeyMax = { kConfigNamespace_ChipCounters, "GroupKeyMax" };
+const P6Config::Key P6Config::kMatterConfig_KeyBase           = { kConfigNamespace_ChipCounters, "KeyBase" };
 CHIP_ERROR P6Config::ReadConfigValue(Key key, bool & val)
 {
     bool in;

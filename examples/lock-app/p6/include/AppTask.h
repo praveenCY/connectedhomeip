@@ -23,7 +23,7 @@
 #include <stdint.h>
 
 #include "AppEvent.h"
-#include "BoltLockManager.h"
+#include "LockManager.h"
 
 #include "FreeRTOS.h"
 #include "timers.h" // provides FreeRTOS timer support
@@ -45,7 +45,7 @@ public:
     CHIP_ERROR StartAppTask();
     static void AppTaskMain(void * pvParameter);
 
-    void PostLockActionRequest(int32_t actor, BoltLockManager::Action action);
+    void ActionRequest(int32_t aActor, LockManager::Action_t aAction);
     void PostEvent(const AppEvent * event);
 
     void ButtonEventHandler(uint8_t btnIdx, uint8_t btnAction);
@@ -56,17 +56,17 @@ private:
 
     CHIP_ERROR Init();
 
-    static void ActionInitiated(BoltLockManager::Action action, int32_t actor);
-    static void ActionCompleted(BoltLockManager::Action action);
+    static void ActionInitiated(LockManager::Action_t aAction, int32_t aActor);
+    static void ActionCompleted(LockManager::Action_t aAction);
 
     void CancelTimer(void);
 
     void DispatchEvent(AppEvent * event);
 
-    static void FunctionTimerEventHandler(AppEvent * event);
-    static void FunctionHandler(AppEvent * event);
-    static void LockActionEventHandler(AppEvent * event);
-    static void TimerEventHandler(TimerHandle_t timer);
+    static void FunctionTimerEventHandler(AppEvent * aEvent);
+    static void FunctionHandler(AppEvent * aEvent);
+    static void LockActionEventHandler(AppEvent * aEvent);
+    static void TimerEventHandler(TimerHandle_t xTimer);
 
     static void UpdateCluster(intptr_t context);
 
