@@ -38,7 +38,7 @@ ALL_PLATFORMS = set([
     'linux',
     'mbed',
     'nrfconnect',
-    'p6',
+    'psoc6',
     'qpg',
     'telink',
     'tizen',
