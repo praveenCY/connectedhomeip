@@ -23,7 +23,7 @@
 #include <app/clusters/ota-requestor/DefaultOTARequestorDriver.h>
 #include <app/clusters/ota-requestor/DefaultOTARequestorStorage.h>
 #include <app/server/Server.h>
-#include <platform/CYW30739/OTAImageProcessorImpl.h>
+#include <platform/Infineon/CYW30739/OTAImageProcessorImpl.h>
 
 namespace OTAConfig {
 

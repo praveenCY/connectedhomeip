@@ -27,7 +27,7 @@
 #include <platform/internal/GenericConfigurationManagerImpl.ipp>
 
 #include <hal/wiced_hal_wdog.h>
-#include <platform/CYW30739/CYW30739Config.h>
+#include <platform/Infineon/CYW30739/CYW30739Config.h>
 #include <platform/ConfigurationManager.h>
 #include <platform/DiagnosticDataProvider.h>
 #include <platform/KeyValueStoreManager.h>

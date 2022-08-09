@@ -23,7 +23,7 @@
 /* this file behaves like a config.h, comes first */
 #include <platform/internal/CHIPDeviceLayerInternal.h>
 
-#include <platform/CYW30739/DiagnosticDataProviderImpl.h>
+#include <platform/Infineon/CYW30739/DiagnosticDataProviderImpl.h>
 #include <platform/PlatformManager.h>
 #include <platform/internal/GenericPlatformManagerImpl.ipp>
 

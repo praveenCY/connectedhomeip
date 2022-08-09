@@ -24,7 +24,7 @@ if (chip_enable_openthread) {
 
 static_library("CYW30739") {
   sources = [
-    "../SingletonConfigurationManager.cpp",
+    "../../SingletonConfigurationManager.cpp",
     "BLEManagerImpl.cpp",
     "BLEManagerImpl.h",
     "BlePlatformConfig.h",
@@ -67,7 +67,7 @@ static_library("CYW30739") {
 
   if (chip_enable_openthread) {
     sources += [
-      "../OpenThread/OpenThreadUtils.cpp",
+      "../../OpenThread/OpenThreadUtils.cpp",
       "ThreadStackManagerImpl.cpp",
       "ThreadStackManagerImpl.h",
     ]
@@ -85,7 +85,7 @@ static_library("CYW30739") {
     }
 
     if (chip_mdns == "platform") {
-      sources += [ "../OpenThread/DnssdImpl.cpp" ]
+      sources += [ "../../OpenThread/DnssdImpl.cpp" ]
 
       deps += [ "${chip_root}/src/lib/dnssd:platform_header" ]
     }

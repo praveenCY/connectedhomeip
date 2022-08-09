@@ -19,8 +19,8 @@ import("//build_overrides/cyw30739_sdk.gni")
 import("${cyw30739_sdk_build_root}/cyw30739_executable.gni")
 import("${cyw30739_sdk_build_root}/cyw30739_sdk.gni")
 
-cyw30739_project_dir = "${chip_root}/examples/ota-requestor-app/cyw30739"
-examples_plat_dir = "${chip_root}/examples/platform/cyw30739"
+cyw30739_project_dir = "${chip_root}/examples/ota-requestor-app/infineon/cyw30739"
+examples_plat_dir = "${chip_root}/examples/platform/infineon/cyw30739"
 
 declare_args() {
   setupPinCode = 20202021
