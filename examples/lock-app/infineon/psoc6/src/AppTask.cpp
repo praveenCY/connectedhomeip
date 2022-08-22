@@ -49,6 +49,8 @@
 #include <DeviceInfoProviderImpl.h>
 #include <app/clusters/door-lock-server/door-lock-server.h>
 #include <app/clusters/identify-server/identify-server.h>
+#include "network_activity_handler.h"
+#include "cy_lwip.h"
 
 /* OTA related includes */
 #if CHIP_DEVICE_CONFIG_ENABLE_OTA_REQUESTOR
@@ -80,6 +82,10 @@ using namespace ::chip::System;
 #define APP_TASK_STACK_SIZE (4096)
 #define APP_TASK_PRIORITY 2
 #define APP_EVENT_QUEUE_SIZE 10
+#define NET_TASK_NAME "NET"
+#define NW_ACTIVITY_TASK_STACK_SIZE       (256)
+#define INACTIVE_INTERVAL_MS    300u
+#define INACTIVE_WINDOW_MS      200u
 
 using chip::app::Clusters::DoorLock::DlLockState;
 using chip::app::Clusters::DoorLock::DlOperationError;
@@ -163,6 +169,17 @@ CHIP_ERROR AppTask::StartAppTask()
     return (sAppTaskHandle == nullptr) ? APP_ERROR_CREATE_TASK_FAILED : CHIP_NO_ERROR;
 }
 
+static void netActivity()
+{
+    struct netif* wifi = cy_lwip_get_interface(CY_LWIP_STA_NW_INTERFACE);
+    while( true )
+    {
+        wait_net_suspend(wifi, portMAX_DELAY, INACTIVE_INTERVAL_MS, INACTIVE_WINDOW_MS);
+        vTaskDelay(500) ;
+    }
+    vTaskDelete(NULL);
+}
+
 CHIP_ERROR AppTask::Init()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
@@ -184,6 +201,8 @@ CHIP_ERROR AppTask::Init()
                     event->InternetConnectivityChange.IPv6 == kConnectivity_Established)
                 {
                     chip::app::DnssdServer::Instance().StartServer();
+                    vTaskDelay(5000) ;
+                    xTaskCreate((TaskFunction_t)netActivity, "NetAct", NW_ACTIVITY_TASK_STACK_SIZE, NULL, 1, NULL);
                 }
             }
         },

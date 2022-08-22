@@ -81,7 +81,7 @@ ENABLE_SECURE_MOSQUITTO_BROKER_SUPPORT=0
 # ... then code in directories named COMPONENT_foo and COMPONENT_bar will be
 # added to the build
 #
-COMPONENTS=FREERTOS LWIP MBEDTLS RTOS_AWARE WICED_BLE OTA_MCUBOOT_PSOC
+COMPONENTS=FREERTOS LWIP MBEDTLS RTOS_AWARE WICED_BLE OTA_MCUBOOT_PSOC WCM SECURE_SOCKETS
 
 # CHIP: ModusToolbox 2.2 & 2.3 do not have a way to disable indirect library
 # dependencies.  This causes trouble for CHIP because we need to use its

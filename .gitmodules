@@ -273,3 +273,6 @@
 [submodule "third_party/boringssl/repo/src"]
 	path = third_party/boringssl/repo/src
 	url = https://github.com/google/boringssl.git
+[submodule "psoc6/lpa"]
+	path = third_party/infineon/psoc6/psoc6_sdk/libs/lpa
+	url = https://github.com/Infineon/lpa.git
