@@ -221,3 +221,11 @@ jobs:
               if: always()
               run: |
                   flake8 --extend-ignore=E501,W391
+
+            # git grep exits with 0 if it finds a match, but we want
+            # to fail (exit nonzero) on match.  And we want to exclude this file,
+            # to avoid our grep regexp matching itself.
+            - name: Check for incorrect error use in SuccessOrExit
+              if: always()
+              run: |
+                  git grep -n "SuccessOrExit(CHIP_ERROR" -- './*' ':(exclude).github/workflows/lint.yml' && exit 1 || exit 0
