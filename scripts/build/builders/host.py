@@ -73,6 +73,7 @@ class HostApp(Enum):
     REFRIGERATOR = auto()
     RVC = auto()
     AIR_PURIFIER = auto()
+    AIR_QUALITY_SENSOR = auto()
 
     def ExamplePath(self):
         if self == HostApp.ALL_CLUSTERS:
@@ -127,6 +128,8 @@ class HostApp(Enum):
             return 'rvc-app/linux'
         elif self == HostApp.AIR_PURIFIER:
             return 'air-purifier-app/linux'
+        elif self == HostApp.AIR_QUALITY_SENSOR:
+            return 'air-quality-sensor-app/linux'
         else:
             raise Exception('Unknown app type: %r' % self)
 

@@ -23,6 +23,7 @@ class InfineonApp(Enum):
     LIGHT = auto()
     ALL_CLUSTERS = auto()
     ALL_CLUSTERS_MINIMAL = auto()
+    AIR_QUALITY_SENSOR = auto()
 
     def ExampleName(self):
         if self == InfineonApp.LOCK:
@@ -33,6 +34,8 @@ class InfineonApp(Enum):
             return 'all-clusters-app'
         elif self == InfineonApp.ALL_CLUSTERS_MINIMAL:
             return 'all-clusters-minimal-app'
+        elif self == InfineonApp.AIR_QUALITY_SENSOR:
+            return 'air-quality-sensor-app'
         else:
             raise Exception('Unknown app type: %r' % self)
 
@@ -45,6 +48,8 @@ class InfineonApp(Enum):
             return 'chip-psoc6-clusters-example'
         elif self == InfineonApp.ALL_CLUSTERS_MINIMAL:
             return 'chip-psoc6-clusters-minimal-example'
+        elif self == InfineonApp.AIR_QUALITY_SENSOR:
+            return 'chip-psoc6-air-quality-sensor-example'
         else:
             raise Exception('Unknown app type: %r' % self)
 
@@ -57,6 +62,8 @@ class InfineonApp(Enum):
             return 'clusters_minimal_app.flashbundle.txt'
         elif self == InfineonApp.LIGHT:
             return 'lighting_app.flashbundle.txt'
+        elif self == InfineonApp.AIR_QUALITY_SENSOR:
+            return 'air_quality_sensor_app.flashbundle.txt'
         else:
             raise Exception('Unknown app type: %r' % self)
 

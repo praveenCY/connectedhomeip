@@ -136,6 +136,7 @@ def BuildHostTarget():
         TargetPart('refrigerator', app=HostApp.REFRIGERATOR),
         TargetPart('rvc', app=HostApp.RVC),
         TargetPart('air-purifier', app=HostApp.AIR_PURIFIER),
+        TargetPart('air-quality-sensor', app=HostApp.AIR_QUALITY_SENSOR),
     ]
 
     if (HostBoard.NATIVE.PlatformName() == 'darwin'):
@@ -392,6 +393,8 @@ def BuildInfineonTarget():
         TargetPart('all-clusters', app=InfineonApp.ALL_CLUSTERS),
         TargetPart('all-clusters-minimal',
                    app=InfineonApp.ALL_CLUSTERS_MINIMAL),
+        TargetPart('air-quality-sensor',
+                   app=InfineonApp.AIR_QUALITY_SENSOR),
     ])
 
     # modifiers
