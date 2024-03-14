@@ -1,10 +1,10 @@
-# CHIP PSoC6 Lighting Example
+# CHIP PSoC6 Air Quality Sensor Example
 
 An example showing the use of Matter on the Infineon CY8CKIT-062S2-43012 board.
 
 <hr>
 
--   [Matter PSoC6 Lighting Example](#chip-psoc6-lighting-example)
+-   [Matter PSoC6 Air Quality Sensor Example](#hip-psoc6-air-quality-sensor-example)
     -   [Introduction](#introduction)
     -   [Building](#building)
     -   [Flashing the Application](#flashing-the-application)
@@ -20,7 +20,7 @@ An example showing the use of Matter on the Infineon CY8CKIT-062S2-43012 board.
 
 ## Introduction
 
-The PSoC6 lighting example provides a baseline demonstration of a Light control
+The PSoC6 Air Quality Sensor example provides a baseline demonstration of a Air Qualify Sensor
 device, built using Matter and the Infineon Modustoolbox SDK. It can be
 controlled by Matter controller over Wi-Fi network.
 
@@ -48,7 +48,7 @@ will then join the network.
 *   Build the example application:
 
           $ source scripts/activate.sh
-          $ scripts/build/build_examples.py --no-log-timestamps --target 'infineon-psoc6-light' build
+          $ scripts/build/build_examples.py --no-log-timestamps --target 'infineon-psoc6-air-quality-sensor' build
 
 -   To delete generated executable, libraries and object files use:
 
@@ -64,7 +64,7 @@ will then join the network.
 -   On the command line:
 
           $ cd ~/connectedhomeip
-          $ python3 out/infineon-psoc6-light/chip-psoc6-lighting-example.flash.py
+          $ python3 out/infineon-psoc6-air-quality-sensor/chip-psoc6-air-quality-sensor-example.py
 
 ## Commissioning and cluster control
 
@@ -109,18 +109,14 @@ commands. These power cycle the BlueTooth hardware and disable BR/EDR mode.
 
 ### Cluster control
 
--   After successful commissioning, use the OnOff cluster command to toggle
-    device between On or Off states.
+-   After successful commissioning, use the Air Quality cluster command to read
+    quality of the analyzed air.
 
-    `$ ./out/debug/chip-tool onoff on 1234 1`
+    `$ ./out/debug/chip-tool airquality read air-quality 1234 1`
 
-    `$ ./out/debug/chip-tool onoff off 1234 1`
 
--   Cluster OnOff can also be done using the `USER_BTN1` button on the board.
-    This button is configured with `APP_LIGHT_BUTTON` in `include/AppConfig.h`.
-    Press `USER_BTN1` on the board to toggle between Light ON and OFF states.
-    Light ON and OFF can be observed with 'LED9' on the board. This LED is
-    configured with `LIGHT_LED` in `include/AppConfig.h`.
+-   Cluster air-quality value can be toggled between 3 and 1 using the `USER_BTN1`
+    button on the board. This button is configured with `APP_SENSOR_BUTTON` in `include/AppConfig.h`.
 
 ### Factory Reset
 

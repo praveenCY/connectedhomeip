@@ -36,7 +36,6 @@
 #include <platform/CHIPDeviceLayer.h>
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
 #include <setup_payload/SetupPayload.h>
-#include "LightingManager.h"
 #include <DeviceInfoProviderImpl.h>
 #include <app/clusters/identify-server/identify-server.h>
 #include <app/clusters/network-commissioning/network-commissioning.h>
@@ -72,6 +71,7 @@ using namespace ::chip::System;
 #define APP_TASK_STACK_SIZE (4096)
 #define APP_TASK_PRIORITY 2
 #define APP_EVENT_QUEUE_SIZE 10
+#define AIR_QUALITY_SENSOR_ENDPOINT 1
 
 namespace {
 TimerHandle_t sFunctionTimer; // FreeRTOS app sw timer.
@@ -111,6 +111,7 @@ using namespace chip::TLV;
 using namespace ::chip::Credentials;
 using namespace ::chip::DeviceLayer;
 
+
 AppTask AppTask::sAppTask;
 static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
 
@@ -139,10 +140,8 @@ static void InitServer(intptr_t context)
 #if CHIP_DEVICE_CONFIG_ENABLE_OTA_REQUESTOR
     GetAppTask().InitOTARequestor();
 #endif
-    chip::app::Clusters::AirQualitySensorManager::InitInstance(1);
-    chip::app::Clusters::AirQualitySensorManager * mInstance = chip::app::Clusters::AirQualitySensorManager::GetInstance(); 
-    // Update Carbon Dioxide
-    mInstance->OnCarbonDioxideMeasurementChangeHandler(400);
+    // Call AirQuality Sensor init function
+    Clusters::AirQualitySensorManager::InitInstance(AIR_QUALITY_SENSOR_ENDPOINT);
 }
 
 CHIP_ERROR AppTask::StartAppTask()
@@ -205,14 +204,6 @@ CHIP_ERROR AppTask::Init()
     NetWorkCommissioningInstInit();
     P6_LOG("Current Firmware Version: %s", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
 
-#if 0
-    err = AirQualityMgr().Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        P6_LOG("AirQualityMgr().Init() failed");
-        appError(err);
-    }
-#endif
     ConfigurationMgr().LogDeviceConfig();
 
     // Print setup info
@@ -289,14 +280,51 @@ void AppTask::AppTaskMain(void * pvParameter)
     }
 }
 
-void AppTask::LightActionEventHandler(AppEvent * event)
+void AppTask::SensorActionEventHandler(AppEvent * event)
 {
+    if (event->ButtonEvent.Action == APP_BUTTON_PRESSED)
+    {
+       chip::DeviceLayer::PlatformMgr().LockChipStack();
+       Clusters::AirQualitySensorManager * mInstance = Clusters::AirQualitySensorManager::GetInstance(); 
+    	if (sAppTask.mAction == Action::kAction_OFF)
+    	{
+    	     // Update AirQuality value
+            mInstance->OnAirQualityChangeHandler(Clusters::AirQuality::AirQualityEnum::kModerate);
 
+            // Update Carbon Dioxide
+            mInstance->OnCarbonDioxideMeasurementChangeHandler(400);
+
+            // Update Temperature value
+            mInstance->OnTemperatureMeasurementChangeHandler(18);
+
+            // Update Humidity value
+            mInstance->OnHumidityMeasurementChangeHandler(60);
+
+            sAppTask.mAction = Action::kAction_ON;
+    	}
+    	else if (sAppTask.mAction == Action::kAction_ON)
+    	{
+    	     // Update AirQuality value
+            mInstance->OnAirQualityChangeHandler(Clusters::AirQuality::AirQualityEnum::kGood);
+
+            // Update Carbon Dioxide
+            mInstance->OnCarbonDioxideMeasurementChangeHandler(200);
+
+            // Update Temperature value
+            mInstance->OnTemperatureMeasurementChangeHandler(28);
+
+            // Update Humidity value
+            mInstance->OnHumidityMeasurementChangeHandler(80);
+
+            sAppTask.mAction = Action::kAction_OFF; 
+    	}
+    	chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+    }
 }
 
 void AppTask::ButtonEventHandler(uint8_t btnIdx, uint8_t btnAction)
 {
-    if (btnIdx != APP_LIGHT_BUTTON_IDX && btnIdx != APP_FUNCTION_BUTTON_IDX)
+    if (btnIdx != APP_SENSOR_BUTTON_IDX && btnIdx != APP_FUNCTION_BUTTON_IDX)
     {
         return;
     }
@@ -306,9 +334,9 @@ void AppTask::ButtonEventHandler(uint8_t btnIdx, uint8_t btnAction)
     button_event.ButtonEvent.ButtonIdx = btnIdx;
     button_event.ButtonEvent.Action    = btnAction;
 
-    if (btnIdx == APP_LIGHT_BUTTON_IDX)
+    if (btnIdx == APP_SENSOR_BUTTON_IDX)
     {
-        button_event.Handler = LightActionEventHandler;
+        button_event.Handler = SensorActionEventHandler;
         sAppTask.PostEvent(&button_event);
     }
     else if (btnIdx == APP_FUNCTION_BUTTON_IDX)
@@ -405,55 +433,6 @@ void AppTask::StartTimer(uint32_t aTimeoutInMs)
     }
 
     mFunctionTimerActive = true;
-}
-
-void AppTask::ActionInitiated(AirSensorManager::Action_t action, int32_t actor)
-{
-    // Action initiated, update the light led
-    if (action == AirSensorManager::ON_ACTION)
-    {
-        P6_LOG("Turning light ON");
-        sLightLED.Set(true);
-    }
-    else if (action == AirSensorManager::OFF_ACTION)
-    {
-        P6_LOG("Turning light OFF");
-        sLightLED.Set(false);
-    }
-
-    if (actor == AppEvent::kEventType_Button)
-    {
-        sAppTask.mSyncClusterToButtonAction = true;
-    }
-}
-
-void AppTask::ActionCompleted(AirSensorManager::Action_t action)
-{
-    // action has been completed bon the light
-    if (action == AirSensorManager::ON_ACTION)
-    {
-        P6_LOG("Light ON");
-    }
-    else if (action == AirSensorManager::OFF_ACTION)
-    {
-        P6_LOG("Light OFF");
-    }
-
-    if (sAppTask.mSyncClusterToButtonAction)
-    {
-        chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(nullptr));
-        sAppTask.mSyncClusterToButtonAction = false;
-    }
-}
-
-void AppTask::PostLightActionRequest(int32_t actor, AirSensorManager::Action_t action)
-{
-    AppEvent event;
-    event.Type              = AppEvent::kEventType_Light;
-    event.LightEvent.Actor  = actor;
-    event.LightEvent.Action = action;
-    event.Handler           = LightActionEventHandler;
-    PostEvent(&event);
 }
 
 void AppTask::PostEvent(const AppEvent * event)

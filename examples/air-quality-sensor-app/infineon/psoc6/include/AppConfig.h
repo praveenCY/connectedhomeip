@@ -22,14 +22,14 @@
 #include "cybsp.h"
 #include "cyhal.h"
 
-// ---- Lighting Example App Config ----
+// ---- Air Quality Sensor Example App Config ----
 
 #define APP_TASK_NAME "APP"
 
-#define APP_LIGHT_BUTTON_IDX 0
+#define APP_SENSOR_BUTTON_IDX 0
 #define APP_FUNCTION_BUTTON_IDX 1
 
-#define APP_LIGHT_BUTTON CYBSP_USER_BTN1
+#define APP_SENSOR_BUTTON CYBSP_USER_BTN1
 #define APP_FUNCTION_BUTTON CYBSP_USER_BTN2
 #define APP_BUTTON_MIN_ASSERT_TIME_MS 30
 

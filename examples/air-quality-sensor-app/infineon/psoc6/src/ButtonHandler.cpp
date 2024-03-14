@@ -50,10 +50,10 @@ void ButtonHandler::GpioInit(void)
 {
     cy_rslt_t result = CY_RSLT_SUCCESS;
     // Set up button GPIOs to input with pullups.
-    result = cyhal_gpio_init(APP_LIGHT_BUTTON, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, CYBSP_BTN_OFF);
+    result = cyhal_gpio_init(APP_SENSOR_BUTTON, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, CYBSP_BTN_OFF);
     if (result != CY_RSLT_SUCCESS)
     {
-        printf(" cyhal_gpio_init failed for APP_LIGHT_BUTTON\r\n");
+        printf(" cyhal_gpio_init failed for APP_SENSOR_BUTTON\r\n");
     }
     result = cyhal_gpio_init(APP_FUNCTION_BUTTON, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, CYBSP_BTN_OFF);
     if (result != CY_RSLT_SUCCESS)
@@ -61,21 +61,21 @@ void ButtonHandler::GpioInit(void)
         printf(" cyhal_gpio_init failed for APP_FUNCTION_BUTTON\r\n");
     }
     /* Configure GPIO interrupt. */
-    static cyhal_gpio_callback_data_t light_button_cbdata;
+    static cyhal_gpio_callback_data_t sensor_button_cbdata;
     static cyhal_gpio_callback_data_t func_button_cbdata;
-    light_button_cbdata.callback     = light_button_callback;
-    light_button_cbdata.callback_arg = NULL;
-    cyhal_gpio_register_callback(APP_LIGHT_BUTTON, &light_button_cbdata);
+    sensor_button_cbdata.callback     = sensor_button_callback;
+    sensor_button_cbdata.callback_arg = NULL;
+    cyhal_gpio_register_callback(APP_SENSOR_BUTTON, &sensor_button_cbdata);
     func_button_cbdata.callback     = func_button_callback;
     func_button_cbdata.callback_arg = NULL;
     cyhal_gpio_register_callback(APP_FUNCTION_BUTTON, &func_button_cbdata);
-    cyhal_gpio_enable_event(APP_LIGHT_BUTTON, CYHAL_GPIO_IRQ_FALL, GPIO_INTERRUPT_PRIORITY, true);
+    cyhal_gpio_enable_event(APP_SENSOR_BUTTON, CYHAL_GPIO_IRQ_FALL, GPIO_INTERRUPT_PRIORITY, true);
     cyhal_gpio_enable_event(APP_FUNCTION_BUTTON, CYHAL_GPIO_IRQ_FALL, GPIO_INTERRUPT_PRIORITY, true);
 }
-void ButtonHandler::light_button_callback(void * handler_arg, cyhal_gpio_event_t event)
+void ButtonHandler::sensor_button_callback(void * handler_arg, cyhal_gpio_event_t event)
 {
     portBASE_TYPE taskWoken = pdFALSE;
-    xTimerStartFromISR(buttonTimers[APP_LIGHT_BUTTON_IDX], &taskWoken);
+    xTimerStartFromISR(buttonTimers[APP_SENSOR_BUTTON_IDX], &taskWoken);
 }
 
 void ButtonHandler::func_button_callback(void * handler_arg, cyhal_gpio_event_t event)
@@ -96,7 +96,7 @@ void ButtonHandler::TimerCallback(TimerHandle_t xTimer)
     }
     else
     {
-        buttonevent = cyhal_gpio_read(APP_LIGHT_BUTTON);
+        buttonevent = cyhal_gpio_read(APP_SENSOR_BUTTON);
     }
     if (!buttonevent)
     {

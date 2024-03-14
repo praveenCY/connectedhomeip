@@ -100,7 +100,7 @@ static void main_task(void * pvParameters)
         appError(ret);
     }
 
-    ret = chip::DeviceLayer::ConnectivityMgr().SetBLEDeviceName("P6_LIGHT");
+    ret = chip::DeviceLayer::ConnectivityMgr().SetBLEDeviceName("P6_AIR_QUALITY");
     if (ret != CHIP_NO_ERROR)
     {
         P6_LOG("ConnectivityMgr().SetBLEDeviceName() failed");

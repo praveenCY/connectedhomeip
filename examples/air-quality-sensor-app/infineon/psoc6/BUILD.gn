@@ -111,7 +111,6 @@ psoc6_executable("air_quality_sensor_app") {
     "${examples_plat_dir}/init_psoc6Platform.cpp",
     "src/AppTask.cpp",
     "src/ButtonHandler.cpp",
-    "src/LightingManager.cpp",
     "src/ZclCallbacks.cpp",
     "src/main.cpp",
     "${chip_root}/examples/air-quality-sensor-app/air-quality-sensor-common/include/air-quality-sensor-manager.h",

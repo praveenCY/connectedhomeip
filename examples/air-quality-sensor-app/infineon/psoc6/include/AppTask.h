@@ -23,7 +23,6 @@
 #include <stdint.h>
 
 #include "AppEvent.h"
-#include "LightingManager.h"
 
 #include "FreeRTOS.h"
 #include "timers.h" // provides FreeRTOS timer support
@@ -45,9 +44,7 @@ public:
     CHIP_ERROR StartAppTask();
     static void AppTaskMain(void * pvParameter);
 
-    void PostLightActionRequest(int32_t actor, AirSensorManager::Action_t action);
     void PostEvent(const AppEvent * event);
-
     void ButtonEventHandler(uint8_t btnIdx, uint8_t btnAction);
     void InitOTARequestor();
 
@@ -56,18 +53,12 @@ private:
 
     CHIP_ERROR Init();
 
-    static void ActionInitiated(AirSensorManager::Action_t action, int32_t actor);
-    static void ActionCompleted(AirSensorManager::Action_t action);
-
     void CancelTimer(void);
-
     void DispatchEvent(AppEvent * event);
-
     static void FunctionTimerEventHandler(AppEvent * event);
     static void FunctionHandler(AppEvent * event);
-    static void LightActionEventHandler(AppEvent * event);
+    static void SensorActionEventHandler(AppEvent * event);
     static void TimerEventHandler(TimerHandle_t timer);
-
     static void UpdateClusterState(intptr_t context);
 
     void StartTimer(uint32_t aTimeoutMs);
@@ -79,7 +70,16 @@ private:
         kInvalid
     };
 
+    enum class Action
+    {
+        kNoneSelected = 0,
+        kAction_ON = 1,
+        kAction_OFF = 2,
+        kInvalid
+    };
+
     Function mFunction              = Function::kNoneSelected;
+    Action mAction                = Action::kAction_OFF;
     bool mFunctionTimerActive       = false;
     bool mSyncClusterToButtonAction = false;
 
